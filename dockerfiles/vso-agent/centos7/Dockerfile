@@ -1,6 +1,6 @@
 #
 # Docker file for building VSO xplat agent running on CentOS 7
-# as provided by Microsoft here: https://github.com/Microsoft/vsts-agent
+# as provided by Microsoft here: https://github.com/Microsoft/vso-agent
 #
 
 FROM centos:centos7
