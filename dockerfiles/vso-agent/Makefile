@@ -1,0 +1,51 @@
+# Builds the docker images for vso-agent
+
+# given taget name like this: centos7-0.4.5.image
+# extract:
+#	TAG=centos7-0.4.5
+#	AGENT_OS=centos7
+#	AGENT_VERSION=0.4.5 
+DOCKER_IMAGE_NAME := vso-agent
+DOCKER_IMAGE_TAG = $(patsubst %.image,%,$@)
+DOCKER_IMAGE_FULL_TAG = $(DOCKER_IMAGE_NAME):$(patsubst %.image,%,$@)
+
+DOCKER_AGENT_OS = $(word 1, $(subst -, ,$(DOCKER_IMAGE_TAG)))
+DOCKER_AGENT_VERSION = $(word 2, $(subst -, ,$(DOCKER_IMAGE_TAG)))
+DOCKER_BUILD_ARGS = --build-arg "z_vso_agent_version=@$(DOCKER_AGENT_VERSION)"
+
+
+DOCKER_SOURCE_LATEST_TAG = $(DOCKER_IMAGE_NAME):$(patsubst %.image,%,$<)
+DOCKER_TARGET_LATEST_TAG = $(DOCKER_IMAGE_NAME):$(patsubst %.image,%,$@)
+
+centos7-latest.image: centos7-0.6.5.image
+	docker tag $(DOCKER_SOURCE_LATEST_TAG) $(DOCKER_TARGET_LATEST_TAG)
+	touch $@
+
+
+centos7-0.4.5.image: centos7.Dockerfile
+	@echo building $@ from $<
+	docker build $(DOCKER_BUILD_ARGS) --tag $(DOCKER_IMAGE_FULL_TAG) -f $< .
+	touch $@
+
+centos7-0.6.5.image: centos7.Dockerfile
+	@echo building $@ from $<
+	docker build $(DOCKER_BUILD_ARGS) --tag $(DOCKER_IMAGE_FULL_TAG) -f $< .
+	touch $@
+
+
+ALL_IMAGES := centos7-0.4.5.image centos7-0.6.5.image centos7-latest.image
+
+
+.PHONY: all
+all: $(ALL_IMAGES)
+	@echo DOCKERFILES: $(DOCKERFILES)
+	@echo IMG: $(IMG)
+
+.PHONY: clean
+clean:
+	-rm -f *.image
+
+
+# .PHONY: all
+
+# all: $(BIN)$(TARGET)
