@@ -44,6 +44,7 @@ all: $(ALL_IMAGES)
 .PHONY: clean
 clean:
 	-rm -f *.image
+	-rm -f *.push
 
 
 %.push : %.image
