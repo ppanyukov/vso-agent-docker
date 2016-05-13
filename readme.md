@@ -4,3 +4,4 @@ at https://github.com/Microsoft/vso-agent
 Note that this kind of agent is planned to be replaced by unified VSTS agent
 which can be found here: https://github.com/Microsoft/vsts-agent/
 
+WORK IN PROGRESS. Things may change or disappear quickly.
