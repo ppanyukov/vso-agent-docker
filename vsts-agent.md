@@ -8,15 +8,27 @@ Docker hub images: https://hub.docker.com/r/ppanyukov/vsts-agent-auto/tags/
 ## Tags
 
 
-- latest --> centos7-latest
+- `latest` --> `centos7-latest`
 
 
-- centos7-latest --> centos7-preview-2.100.1
+- `centos7-latest` --> `centos7-preview-2.101.0`
 
 
-- centos7-preview-2.100.1
+- `centos7-preview-2.101.0`
 
-    - The latest preview release on centos 7 as of 24 May 2016.
+    - The latest preview release on centos 7 as of 26 May 2016.
+
+    - Meaner and leaner image with fewer questionable dependencies:
+
+    - no longer need libcurl from www.city-fan.org, now using standard EL7 RPM
+
+    - no longer need custom-built git as it now comes bundled with VSTS tar.gz
+
+
+
+- `centos7-preview-2.100.1`
+
+    - Preview release on centos 7 as of 24 May 2016.
 
 
     - uses git 2.8.1 custom-built from source from here: https://github.com/ppanyukov/git-build
