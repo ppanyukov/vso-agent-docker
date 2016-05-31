@@ -1,5 +1,5 @@
 BASE_IMAGE_TAG := 'ppanyukov/vsts-agent-auto:centos7-preview-2.101.0'
-IMAGE_TAG := ppanyukov/vsts-agent-acs3:dev
+IMAGE_TAG := ppanyukov/vsts-agent-acs:dev
 
 .PHONY: clean all push
 
@@ -9,10 +9,17 @@ Dockerfile: template.Dockerfile
 		$< > $@.tmp
 	mv $@.tmp $@
 
+marathon.json: template.marathon.json
+	sed \
+		-e 's#%IMAGE_TAG%#$(IMAGE_TAG)#g' \
+		$< > $@.tmp
+	mv $@.tmp $@
+
 clean:
 	-rm -rf Dockerfile
+	-rm -rf marathon.json
 
-all: Dockerfile
+all: Dockerfile marathon.json
 	docker pull $(BASE_IMAGE_TAG)
 	docker build --tag $(IMAGE_TAG) .
 	@echo Built image $(IMAGE_TAG)
