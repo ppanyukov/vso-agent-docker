@@ -38,3 +38,8 @@ Base unconfigured Centos 7 based Docker images for the VSO agents.
     See [vsts-agent.md](https://github.com/ppanyukov/vso-agent-docker/blob/master/vsts-agent.md) for detail.
 
 
+
+3. **VSTS agent for Azure Container Services (ACS) and Marathon on Mesos**
+
+    Experimental. See readme https://github.com/ppanyukov/vso-agent-acs/readme.md
+
