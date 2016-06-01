@@ -8,10 +8,6 @@
   "container": {
     "docker": {
       "parameters": [
-        {
-          "key": "stop-signal",
-          "value": "SIGQUIT"
-        }
       ],
       "network": "HOST",
       "image": "%IMAGE_TAG%",

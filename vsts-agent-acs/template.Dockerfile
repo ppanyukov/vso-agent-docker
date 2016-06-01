@@ -2,4 +2,10 @@ FROM %BASE_IMAGE_TAG%
 
 ADD run-vsts-docker-image.sh run-vsts-docker-image.sh
 
+ENV \
+    IMAGE_BUILD_INFO01="IMAGE_BUILD_DATE=%DATE%" \
+    IMAGE_BUILD_INFO02="IMAGE_BUILD_HOST=%HOSTNAME%" \
+    IMAGE_BUILD_INFO03="IMAGE_BUILD_TAG=%IMAGE_TAG%" \
+    IMAGE_BUILD_INFO04="IMAGE_BUILD_BASE_TAG=%BASE_IMAGE_TAG%"
+
 CMD ["bash", "run-vsts-docker-image.sh"]

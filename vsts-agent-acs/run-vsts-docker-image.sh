@@ -43,6 +43,27 @@ Example: Running in docker container
 EOF
 }
 
+# Cleanly terminates background jobs (including VSTS agent)
+function clean_up {
+    # Assume %1 is the vso agent, it needs SIGQUIT
+    echo "Invoking clean-up scrip"
+    # all the rest plain kill, no fail
+    J=$(jobs -p)
+    echo "PIDs to kill: ${J}"
+    kill -s SIGINT ${J}
+
+    # This should unregister the agent from VSO
+    # Hopefully removes the need for sleep?
+    echo "Removing agent from VSO"
+    ./bin/Agent.Listener unconfigure --unattended
+
+    # Somehow must have this sleep to get the agent to report to
+    # VSO it is dead. Is 3 secs enough?
+    # sleep 3s
+
+    echo DONE CLEANUP
+}
+
 function run {
 
     # Require these env variables to be set:
@@ -88,8 +109,17 @@ function run {
 
     # This actually runs the agent.
     echo "Running VSTS agent..."
-    exec ./bin/Agent.Listener \
-        --unattended 
+    # Run in background. Trap SIGTERM SIGINT SIGQUIT and kill that background job
+    # This is a workaround for agent not responding to SIGTERM at the mo.
+
+    # Cleanup hook
+    trap clean_up HUP INT QUIT TERM
+
+    ./bin/Agent.Listener \
+        --unattended &
+
+    echo "Running the agent in background"
+    wait
 }
 
 

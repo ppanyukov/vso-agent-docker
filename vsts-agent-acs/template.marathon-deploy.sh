@@ -52,8 +52,8 @@ then
     exit 0
 fi
 
-curl -X POST -H 'Content-Type: application/json' \
-    ${MARATHON_URI}/apps --data @${MANIFEST}
+curl -i -X PUT -H 'Content-Type: application/json' \
+    ${MARATHON_URI}/apps/%MARATHON_ID% --data @${MANIFEST}
 
 # add newline
 echo

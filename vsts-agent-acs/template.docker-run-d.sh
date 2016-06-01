@@ -10,7 +10,7 @@ NOTE:
 
         '%IMAGE_TAG%' 
 
-    interactively (not daemonised) using local docker.
+    in a daemonised mode using local docker.
     
     The VSTS credentials are prepopulated.
     
@@ -19,9 +19,8 @@ NOTE:
 EOF
 
 docker run \
-    -it \
-    --rm \
-    --stop-signal=SIGQUIT \
+    -d \
+    --restart=on-failure:3 \
     -e VSTS_AGENT_NAME_PREFIX="%VSTS_AGENT_NAME_PREFIX%.${HOSTNAME}" \
     -e VSTS_AUTH_TYPE="%VSTS_AUTH_TYPE%" \
     -e VSTS_AUTH_TOKEN="%VSTS_AUTH_TOKEN%" \

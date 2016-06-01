@@ -16,6 +16,10 @@ TEMPLATE_FILES := $(wildcard template.*)
 GENERATED_FILES := $(patsubst template.%, $(WORKDIR)%, $(TEMPLATE_FILES))
 .PHONY: $(GENERATED_FILES)
 
+# For embedding into various things
+DATE := $(shell date +"%Y%m%d-%H%M%S")
+HOSTNAME := $(shell hostname)
+
 
 # Do not fail if the user-supplied settings file does not exist
 include $(DEFAULT_VSTS_SETTINGS)
@@ -112,6 +116,8 @@ $(GENERATED_FILES): $(WORKDIR)%: template.%
 		-e 's#%MARATHON_ID%#$(MARATHON_ID)#g' \
 		-e 's#%MARATHON_INSTANCES%#$(MARATHON_INSTANCES)#g' \
 		-e 's#%MARATHON_VERSION%#$(MARATHON_VERSION)#g' \
+		-e 's#%DATE%#$(DATE)#g' \
+		-e 's#%HOSTNAME%#$(HOSTNAME)#g' \
 		$< > $@.tmp
 	@mv $@.tmp $@
 	@echo -----------------------------------------
