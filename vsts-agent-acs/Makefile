@@ -3,8 +3,8 @@ IMAGE_TAG := ppanyukov/vsts-agent-acs:dev
 
 # VSTS settings files, defaults and user-supplied
 # The user-supplied file does not have to exist
-DEFAULT_VSTS_SETTINGS := defaultVstsSettings.mk
-USER_VSTS_SETTINGS := ~/.vsts-agent-acs/vsts.settings
+DEFAULT_VSTS_SETTINGS := vsts.settings marathon.settings
+USER_VSTS_SETTINGS := ~/.vsts-agent-acs/vsts.settings ~/.vsts-agent-acs/marathon.settings
 
 # intermediate build artifacts will go here
 WORKDIR := _work/
@@ -20,7 +20,6 @@ GENERATED_FILES := $(patsubst template.%, $(WORKDIR)%, $(TEMPLATE_FILES))
 # Do not fail if the user-supplied settings file does not exist
 include $(DEFAULT_VSTS_SETTINGS)
 -include $(USER_VSTS_SETTINGS)
-
 
 .PHONY: help all templates clean push agent_image $(OUT_DOCKERFILE) $(OUT_MARATHON_JSON)
 
@@ -97,6 +96,7 @@ agent_image: $(OUT_DOCKERFILE)
 
 # Replace placeholders in any template.<filename> file and write to $(WORKDIR)/<filename>
 $(GENERATED_FILES): $(WORKDIR)%: template.%
+
 	@echo -----------------------------------------
 	@echo Generating $@ from $< tempalate
 	@mkdir -p $(WORKDIR)
@@ -109,6 +109,9 @@ $(GENERATED_FILES): $(WORKDIR)%: template.%
 		-e 's#%VSTS_AUTH_TOKEN%#$(VSTS_AUTH_TOKEN)#g' \
 		-e 's#%VSTS_POOL%#$(VSTS_POOL)#g' \
 		-e 's#%VSTS_URL%#$(VSTS_URL)#g' \
+		-e 's#%MARATHON_ID%#$(MARATHON_ID)#g' \
+		-e 's#%MARATHON_INSTANCES%#$(MARATHON_INSTANCES)#g' \
+		-e 's#%MARATHON_VERSION%#$(MARATHON_VERSION)#g' \
 		$< > $@.tmp
 	@mv $@.tmp $@
 	@echo -----------------------------------------

@@ -1,0 +1,10 @@
+# Marathon-specific template values.
+MARATHON_ID=vsts-agent
+
+# Default number of instances to run
+# Will be used on first deployment and as
+# a default value to marathon-scale.sh
+MARATHON_INSTANCES=0
+
+# Auto-generate marathon app version
+MARATHON_VERSION := $(shell date +"%Y%m%d-%H%M%S")

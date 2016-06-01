@@ -60,7 +60,9 @@ function run {
 
 
     # Agent names can't exceed 64 chars
-    local VSTS_AGENT_NAME=$(echo "${VSTS_AGENT_NAME_PREFIX}.$(uuidgen)" | cut -c1-64)
+    # Emded timstamp to give predictable order to agent names
+    DATE=$(date +"%Y%m%d-%H%M%S")
+    local VSTS_AGENT_NAME=$(echo "${VSTS_AGENT_NAME_PREFIX}.${DATE}.$(uuidgen)" | cut -c1-64)
 
 
     # Make sure these are not published as capabilities
