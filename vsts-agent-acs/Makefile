@@ -1,11 +1,20 @@
 BASE_IMAGE_TAG := 'ppanyukov/vsts-agent-auto:centos7-preview-2.101.0'
 IMAGE_TAG := ppanyukov/vsts-agent-acs:dev
 
+# VSTS settings files, defaults and user-supplied
+# The user-supplied file does not have to exist
+DEFAULT_VSTS_SETTINGS := defaultVstsSettings.mk
+USER_VSTS_SETTINGS := ~/.vsts-agent-acs/vsts.settings
 
 # intermediate build artifacts will go here
 WORKDIR := _work/
 OUT_DOCKERFILE := $(WORKDIR)Dockerfile
 OUT_MARATHON_JSON := $(WORKDIR)marathon.json
+
+# Do not fail if the user-supplied settings file does not exist
+include $(DEFAULT_VSTS_SETTINGS)
+-include $(USER_VSTS_SETTINGS)
+
 
 .PHONY: help all clean push agent_image $(OUT_DOCKERFILE) $(OUT_MARATHON_JSON)
 
@@ -24,6 +33,14 @@ help:
 	@echo "	- make $(OUT_DOCKERFILE): to generate Dockerfile from template"
 	@echo "	- make $(OUT_MARATHON_JSON): to generate marathon manifest file"
 	@echo ""
+	@echo ""
+	@echo " VSTS credentials for marathon etc:"
+	@echo ""
+	@echo "	- to actually run the agent it needs to be configured with credentials"
+	@echo "	- these can be provided in '$(USER_VSTS_SETTINGS)'"
+	@echo " - this makefile will automatically pick it up"
+	@echo " - the values from '$(USER_VSTS_SETTINGS)' will be used to replace tokens in various other files"
+	@echo " - for the list of settings see "
 
 
 # Almost all, excluding pushing and deployments
@@ -79,13 +96,16 @@ $(OUT_DOCKERFILE): template.Dockerfile
 
 
 
+
 # Generate marathon json application manifest from template
-# TODO(ppanyukov): VSTS credentials etc embedded there.
 $(OUT_MARATHON_JSON): template.marathon.json
 	mkdir -p $(WORKDIR)
 	sed \
 		-e 's#%IMAGE_TAG%#$(IMAGE_TAG)#g' \
+		-e 's#%VSTS_AGENT_NAME_PREFIX%#$(VSTS_AGENT_NAME_PREFIX)#g' \
+		-e 's#%VSTS_AUTH_TYPE%#$(VSTS_AUTH_TYPE)#g' \
+		-e 's#%VSTS_AUTH_TOKEN%#$(VSTS_AUTH_TOKEN)#g' \
+		-e 's#%VSTS_POOL%#$(VSTS_POOL)#g' \
+		-e 's#%VSTS_URL%#$(VSTS_URL)#g' \
 		$< > $@.tmp
 	mv $@.tmp $@
-
-

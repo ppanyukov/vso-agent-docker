@@ -28,11 +28,11 @@
     }
   ],
   "env": {
-    "VSTS_AGENT_NAME_PREFIX": "your_prefix",
-    "VSTS_AUTH_TYPE": "PAT",
-    "VSTS_AUTH_TOKEN": "your_token",
-    "VSTS_POOL": "your_agent_pool_name",
-    "VSTS_URL": "https://your_company.visualstudio.com"
+    "VSTS_AGENT_NAME_PREFIX": "%VSTS_AGENT_NAME_PREFIX%",
+    "VSTS_AUTH_TYPE": "%VSTS_AUTH_TYPE%",
+    "VSTS_AUTH_TOKEN": "%VSTS_AUTH_TOKEN%",
+    "VSTS_POOL": "%VSTS_POOL%",
+    "VSTS_URL": "%VSTS_URL%"
   },
   "labels": {},
   "healthChecks": []
