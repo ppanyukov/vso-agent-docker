@@ -7,7 +7,7 @@ Base unconfigured Centos 7 based Docker images for the VSO agents.
 ## Agents:
 
 
-1. **VSTS agent (PREVIEW) **
+1. **VSTS agent - PREVIEW**
 
     The new unified agent (https://github.com/Microsoft/vsts-agent/).
 
@@ -21,7 +21,7 @@ Base unconfigured Centos 7 based Docker images for the VSO agents.
 
 
 
-2. **xplat agent (DEPRECATED) **
+2. **xplat agent - DEPRECATED**
 
     The original cross-platform VSO agent (aka xplat agent, https://github.com/Microsoft/vso-agent)
 
