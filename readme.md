@@ -6,7 +6,22 @@ Base unconfigured Centos 7 based Docker images for the VSO agents.
 
 ## Agents:
 
-1. **xplat agent**
+
+1. **VSTS agent (PREVIEW) **
+
+    The new unified agent (https://github.com/Microsoft/vsts-agent/).
+
+    This agent is in preview as of 06 June 2016 .
+
+    Latest release: 2.101.1
+
+    Pre-built docker images: https://hub.docker.com/r/ppanyukov/vsts-agent-auto/tags/
+
+    See [vsts-agent.md](https://github.com/ppanyukov/vso-agent-docker/blob/master/vsts-agent.md) for detail.
+
+
+
+2. **xplat agent (DEPRECATED) **
 
     The original cross-platform VSO agent (aka xplat agent, https://github.com/Microsoft/vso-agent)
 
@@ -19,22 +34,5 @@ Base unconfigured Centos 7 based Docker images for the VSO agents.
     This agent is planned to be replaced with unifined VSTS agent (soon they say).
 
     See [xplat-agent.md](https://github.com/ppanyukov/vso-agent-docker/blob/master/xplat-agent.md) for details.
-
-
-
-2. **VSTS agent**
-
-    The new unified agent (https://github.com/Microsoft/vsts-agent/).
-
-    This agent is in preview as of 26 May 2016 .
-
-    Latest release: 2.101.0
-
-        - no longer need libcurl from www.city-fan.org
-        - no longer need custom-built git as it now comes bundled with VSTS tar.gz
-
-    Pre-built docker images: https://hub.docker.com/r/ppanyukov/vsts-agent-auto/tags/
-
-    See [vsts-agent.md](https://github.com/ppanyukov/vso-agent-docker/blob/master/vsts-agent.md) for detail.
 
 

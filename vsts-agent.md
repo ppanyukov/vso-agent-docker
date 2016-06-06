@@ -11,7 +11,15 @@ Docker hub images: https://hub.docker.com/r/ppanyukov/vsts-agent-auto/tags/
 - `latest` --> `centos7-latest`
 
 
-- `centos7-latest` --> `centos7-preview-2.101.0`
+- `centos7-latest` --> `centos7-preview-2.101.1`
+
+
+- `centos7-preview-2.101.1`
+
+    - The latest preview release on centos 7 as of 06 June 2016.
+
+    - Even smaller image than `centos7-preview-2.101.0` with
+      more aggressive deletion of things we don't need.
 
 
 - `centos7-preview-2.101.0`
