@@ -5,7 +5,7 @@
 # Default image tag to build/run
 if test "X${IMAGE_TAG}" = "X"
 then
-    IMAGE_TAG="centos7-preview-2.101.1"
+    IMAGE_TAG="centos7-2.103.0"
 fi
 
 pushd $(dirname $0)/${IMAGE_TAG} &>/dev/null
@@ -31,6 +31,8 @@ function do_start {
     # interactive startup if second arg is -i
     local flags="-d --restart=always"
 
+    local cmd='./run-vsts-agent-d.sh 1>>/home/vsoagent/_diag/stdout.log 2>>/home/vsoagent/_diag/stderr.log'
+
     if test "X${ARG2}" = "X-i"
     then
         flags="-it --rm"
@@ -41,11 +43,6 @@ function do_start {
     then
         flags="-it --rm"
         cmd=bash
-    else
-        cmd=/usr/bin/bash -c "
-            exec ./run-vsts-agent-d.sh \\
-            1>>/home/vsoagent/_diag/stdout.log 2>>/home/vsoagent/_diag/stderr.log
-        "
     fi
 
     echo "Starting image ${IMAGE_NAME} to run with name ${CONTAINER_NAME} with flags: ${flags}."
@@ -66,8 +63,9 @@ function do_start {
         -e VSTS_URL="${VSTS_URL}" \
         -v $(pwd)/${DIR}/_diag:/home/vsoagent/_diag \
         -v $(pwd)/${DIR}/_work:/home/vsoagent/_work \
+        -v $(pwd)/${DIR}/files/run-vsts-agent-d.sh:/home/vsoagent/run-vsts-agent-d.sh \
         ${IMAGE_NAME} \
-        ${cmd}
+        /usr/bin/bash -c "exec ${cmd}"
 
 }
 
