@@ -253,6 +253,7 @@ function run {
         --acceptteeeula Y" \
     ${SUID}
 
+    STORED_CREDENTIALS=$(cat .Credentials)
 
     # This actually runs the agent.
     echo "Running VSTS agent..."
@@ -264,9 +265,12 @@ function run {
     # Read .Credentials into STORED_CREDENTIALS for later use and delete
     # from file system once agent starts and registers with VSO. Give 
     # reasonable time for this -- 30 sec should be enough?
-    sleep 30s
-    STORED_CREDENTIALS=$(cat .Credentials)
+    echo "sleeping for 20s before removing credentials files"
+    sleep 20s
+    echo "removing credentials files"
     rm -f .Credentials
+    echo "done removing credentials files"
+
 
     # This will wait for the termination of all child processes.
     # Need to also wait in clean_up due to how bash works.
