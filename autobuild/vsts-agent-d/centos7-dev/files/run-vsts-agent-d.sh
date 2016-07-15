@@ -49,11 +49,17 @@ Some features:
     - unregisters the agent from VSO when it stops via SIGTERM (best effort)
     - maskig of VSTS_ environment variables
     - suitable for running on clusters (ACS/Mesos/DCOS)
+    - security features around credentials handling
 
-For full list of features and docs see docs at: https://github.com/ppanyukov/vso-agent-docker
+For full list of features and docs see https://github.com/ppanyukov/vso-agent-docker
 
 EOF
 }
+
+# Feature: security
+# Read .Credentials into var here and delete from file system once agent starts.
+# When agent stops and we need to deregister agent we write this back to file.
+STORED_CREDENTIALS=""
 
 # Cleanly terminates background jobs (including VSTS agent)
 function clean_up {
@@ -71,6 +77,7 @@ function clean_up {
 
     # Feature: security
     # Make .Credentials available to agent so we unconfigure from VSO
+    echo ${STORED_CREDENTIALS} > .Credentials
     chown ${z_user_name}:${z_user_group_name} .Credentials && chmod 600 .Credentials
 
     # This should unregister the agent from VSO
@@ -79,7 +86,7 @@ function clean_up {
 
     # Feature: security
     # Just make sure credentials are zapped
-    rm -rf .Credentials
+    rm -f .Credentials
 
     # See http://veithen.github.io/2014/11/16/sigterm-propagation.html
     # for why we use wait here.
@@ -254,10 +261,12 @@ function run {
     echo "Running the agent in background"
 
     # Feature: security
-    # Change .Credentials permissions once agent is started.
-    # TODO(ppanyukov): do we need to use sleep at all?
-    sleep 1s
-    chown root:root .Credentials && chmod 400 .Credentials
+    # Read .Credentials into STORED_CREDENTIALS for later use and delete
+    # from file system once agent starts and registers with VSO. Give 
+    # reasonable time for this -- 30 sec should be enough?
+    sleep 30s
+    STORED_CREDENTIALS=$(cat .Credentials)
+    rm -f .Credentials
 
     # This will wait for the termination of all child processes.
     # Need to also wait in clean_up due to how bash works.
