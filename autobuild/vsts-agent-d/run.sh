@@ -36,6 +36,18 @@ function do_start {
         flags="-it --rm"
     fi
 
+    # Interactive bash if second ar is -b
+    if test "X${ARG2}" = "X-b"
+    then
+        flags="-it --rm"
+        cmd=bash
+    else
+        cmd=/usr/bin/bash -c "
+            exec ./run-vsts-agent-d.sh \\
+            1>>/home/vsoagent/_diag/stdout.log 2>>/home/vsoagent/_diag/stderr.log
+        "
+    fi
+
     echo "Starting image ${IMAGE_NAME} to run with name ${CONTAINER_NAME} with flags: ${flags}."
 
     # VSTS_ vars come from this file
@@ -55,10 +67,7 @@ function do_start {
         -v $(pwd)/${DIR}/_diag:/home/vsoagent/_diag \
         -v $(pwd)/${DIR}/_work:/home/vsoagent/_work \
         ${IMAGE_NAME} \
-        /usr/bin/bash -c "
-            exec ./run-vsts-agent-d.sh \\
-            1>>/home/vsoagent/_diag/stdout.log 2>>/home/vsoagent/_diag/stderr.log
-        "
+        ${cmd}
 
 }
 
