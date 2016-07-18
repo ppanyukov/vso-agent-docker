@@ -3,8 +3,7 @@
 # Wrapper script to be run within the container to configure and launch
 # VSTS agent.
 #
-# Runs VSTS image in docker container in unattended daemonised mode.
-# 
+# See comments throughout the script to see what and why.
 
 set -e
 
@@ -56,12 +55,6 @@ For full list of features and docs see https://github.com/ppanyukov/vso-agent-do
 EOF
 }
 
-# Feature: security
-# Read .credentials into var here and delete from file system once agent starts.
-# When agent stops and we need to deregister agent we write this back to file.
-STORED_CREDENTIALS1=""
-STORED_CREDENTIALS2=""
-
 # Cleanly terminates background jobs (including VSTS agent)
 function clean_up {
     echo "Invoking clean-up script"
@@ -77,21 +70,18 @@ function clean_up {
 
     sleep 2s
 
-    # Feature: security
-    # Make .credentials available to agent so we unconfigure from VSO
-    echo ${STORED_CREDENTIALS1} > .credentials
-    chown ${z_user_name}:${z_user_group_name} .credentials && chmod 600 .credentials
-
-    echo ${STORED_CREDENTIALS2} > .credentials_rsaparams
-    chown ${z_user_name}:${z_user_group_name} .credentials_rsaparams && chmod 600 .credentials_rsaparams
-
     # This should unregister the agent from VSO
+    # We now need to supply the auth token we used during registration as
+    # the agent no longer keeps this around.
+    # See: https://github.com/Microsoft/vsts-agent/issues/403
     echo "Removing agent from VSO"    
-    ./bin/Agent.Listener remove --unattended --auth ${VSTS_AUTH_TYPE} --token ${VSTS_AUTH_TOKEN}
+    ./bin/Agent.Listener remove --unattended --auth "${VSTS_AUTH_TYPE}" --token "${VSTS_AUTH_TOKEN}"
 
     # Feature: security
-    # Just make sure credentials are zapped
-    rm -f .credentials
+    # Just make sure credentials are zapped.
+    # Even though these credentials may no longer be super-sensitive, not reason
+    # to leave them floating around.
+    rm -f .credentials .credentials_rsaparams
 
     # See http://veithen.github.io/2014/11/16/sigterm-propagation.html
     # for why we use wait here.
@@ -124,11 +114,7 @@ function run {
     #
     #   - agent is started as non-priviledged user
     #
-    #   - after the agent starts, we change mode of .credentials file
-    #     to be owned by root and only root can read it.
-    #  
-    #   - on shutdown we allow the agent to read .credentials again to
-    #     unregister from VSO.
+    #   - on shutdown we zap .credentials just to make sure.
     #
     #
     # How this solves the problem:
@@ -145,11 +131,21 @@ function run {
     #   - similarly VSTS_ vars will not be exposed as capabilities in VSO
     #     because we do not make these available as env vars to the agent process
     #
-    #   - build tasks will not be able to 'cat .credentials' because it will be
-    #     owned by root and only root will be able to read it.
-    #
     # The implementation is spread around in this file with relevant comments
     # where appropriate.
+    #
+    # NOTE on .credentials files:
+    #   - unfortunately we can no longer employ the "delete credentials once
+    #     the agent starts" solution because the agent requires files 
+    #     .credentials_rsaparams file when executing the build.
+    #     The contents of this file is not as sensitive as before but is still
+    #     not 100% secure.
+    #     
+    #     The change is in RTM release of v2.103.0 where a lot of work on
+    #     security was done.
+    #
+    #     For details of what these files are see here:
+    #     https://github.com/Microsoft/vsts-agent/issues/402
 
 
     # Feature: security.
@@ -259,27 +255,11 @@ function run {
         --acceptteeeula Y" \
     ${SUID}
 
-    STORED_CREDENTIALS1=$(cat .credentials)
-    STORED_CREDENTIALS2=$(cat .credentials_rsaparams)
-
     # This actually runs the agent.
     echo "Running VSTS agent..."
     ${SUCMD} "exec ./bin/Agent.Listener --unattended" ${SUID} &
 
     echo "Running the agent in background"
-
-    # Feature: security
-    # Read .credentials into STORED_CREDENTIALS1 for later use and delete
-    # from file system once agent starts and registers with VSO. Give 
-    # reasonable time for this -- 30 sec should be enough?
-
-    echo "sleeping for 20s before removing credentials files"
-    sleep 20s
-    echo "removing credentials files"
-    rm -f .credentials
-    rm -f .credentials_rsaparams
-    echo "done removing credentials files"
-
 
     # This will wait for the termination of all child processes.
     # Need to also wait in clean_up due to how bash works.
