@@ -5,7 +5,7 @@
 # Default image tag to build/run
 if test "X${IMAGE_TAG}" = "X"
 then
-    IMAGE_TAG="centos7-2.103.0"
+    IMAGE_TAG="centos7-2.103.1"
 fi
 
 pushd $(dirname $0)/${IMAGE_TAG} &>/dev/null
