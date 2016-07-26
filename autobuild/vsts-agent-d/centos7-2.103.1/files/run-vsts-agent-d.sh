@@ -186,6 +186,11 @@ function run {
         exit -1
     fi
 
+
+    # Workaround: avoid infinite stop-start loops due to agent auto-update.
+    # Perform agent update before starting.
+    ${SUCMD} "${z_user_home}/update-vsts-agent.sh" ${SUID}
+
     # Feature: Reliable restart for 'docker run -d --restart=always' 
     # in this scenario:
     #
