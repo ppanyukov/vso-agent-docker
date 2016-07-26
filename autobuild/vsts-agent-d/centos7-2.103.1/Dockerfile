@@ -4,6 +4,6 @@ FROM ppanyukov/vsts-agent-auto:centos7-2.103.1
 # env vars etc.
 USER root
 
-ADD files/run-vsts-agent-d.sh run-vsts-agent-d.sh
+COPY files/* /home/vsoagent/
 
 CMD ["/bin/bash", "./run-vsts-agent-d.sh"]
