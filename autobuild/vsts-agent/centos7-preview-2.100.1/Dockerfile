@@ -40,9 +40,11 @@ RUN echo "" \
 #   fatal: Authentication failed for 'https://OAuth:********@blah.visualstudio.com/project/_git/repo/'
 #   2016-05-16T19:34:19.6230250Z ##[error]Git fetch failed with exit code: 128
 #
+# EPEL repo is now required for some deps for libcurl
 RUN echo "" \
     && echo "Installing prereqs" \
     && yum -y install \
+        epel-release \
         libunwind \
         icu \
     && rpm -Uvh http://www.city-fan.org/ftp/contrib/yum-repo/rhel6/x86_64/city-fan.org-release-1-13.rhel6.noarch.rpm \
