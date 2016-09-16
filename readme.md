@@ -1,28 +1,26 @@
-
-**WORK IN PROGRESS.** Things may change or disappear quickly.
-
-
 # Agents:
 
 
-## 1. vsts-agent - PREVIEW
+## 1. vsts-agent
 
 Base unconfigured agent Docker image on Centos 7.
 
-This is new unified agent, see https://github.com/Microsoft/vsts-agent/
+NOTE that due to the VSTS auto-update feature these images are generally
+unsuitable for running in a daemonised mode. You probably want `vsts-agent-d`
+for this.
 
-The agent is in preview as of 08 June 2016 .
-
-Latest release: 2.101.1
+The git repo for agent: https://github.com/Microsoft/vsts-agent/
 
 Pre-built docker images: https://hub.docker.com/r/ppanyukov/vsts-agent-auto/tags/
 
 See [vsts-agent.md](https://github.com/ppanyukov/vso-agent-docker/blob/master/vsts-agent.md) for more detail.
 
 
-## 2. vsts-agent-d - PREVIEW
+## 2. vsts-agent-d
 
-Image built on top of base `vsts-agent` to run in unattended
+This is the one you probably want to use if you want a good working agent.
+
+Image is built on top of base `vsts-agent` to run in unattended
 mode on VMs and on clusters, with several features and enhancements
 required to support this.
 
@@ -44,6 +42,12 @@ Briefly:
 - correct handling of SIGTERM
 
 - removal of agent registration from VSO on stop
+
+- security features
+
+- auto-update on start and restart
+
+- can build and run docker images using host's docker daemon
 
 
 For full docs see [vsts-agent-d.md](https://github.com/ppanyukov/vso-agent-docker/blob/master/vsts-agent-d.md)

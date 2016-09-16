@@ -1,66 +1,29 @@
-# New VSTS agent
+# Base unconfigured VSTS agent
 
-Original source: 
+Original source: https://github.com/Microsoft/vsts-agent
 
 Docker hub images: https://hub.docker.com/r/ppanyukov/vsts-agent-auto/tags/
+
+This is a completely base install of the agent.
 
 
 ## Tags
 
+*These may be out of date, but gives an idea*
 
 - `latest` --> `centos7-latest`
 
+- `centos7-latest` --> `centos7-2.106`
 
-- `centos7-latest` --> `centos7-preview-2.101.1`
+- `centos7-2.106`
 
-
-- `centos7-preview-2.101.1`
-
-    - The latest preview release on centos 7 as of 06 June 2016.
-
-    - Even smaller image than `centos7-preview-2.101.0` with
-      more aggressive deletion of things we don't need.
+    - this image uses custom-built `git 2.9.0` from this repository:
+      https://github.com/ppanyukov/git-build
 
 
-- `centos7-preview-2.101.0`
+## Older images
 
-    - The latest preview release on centos 7 as of 26 May 2016.
+There are quite a few, you probably don't want to use them though because
+VSTS forces auto-update and older images will not run.
 
-    - Meaner and leaner image with fewer questionable dependencies:
-
-    - no longer need libcurl from www.city-fan.org, now using standard EL7 RPM
-
-    - no longer need custom-built git as it now comes bundled with VSTS tar.gz
-
-
-
-- `centos7-preview-2.100.1`
-
-    - Preview release on centos 7 as of 24 May 2016.
-
-
-    - uses git 2.8.1 custom-built from source from here: https://github.com/ppanyukov/git-build
-
-        The git version 1.8.3.1 which comes with official centos 7 is too
-        old and does not work with VSTS agent.
-
-        The minimum required is 1.9.1
-
-
-    - libcurl from www.city-fan.org
-
-        The libcurl coming with centos 7 is too old and it does not
-        work with OAuth authentication.
-
-        This version of libcurl is installed as per instructions on
-        given by VSTS project here: https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/latebreaking.md
-
-
-
-## Known issues
-
-probably lots
-
-
-
-
+For the image correctly hadling auto-update see `vsts-agent-d`.

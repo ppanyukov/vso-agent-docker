@@ -1,5 +1,7 @@
 # Original xplat VSO agent
 
+**THIS IS DEPRECATED AND IS NOT SUPPORTED**
+
 Source: https://github.com/Microsoft/vso-agent
 
 

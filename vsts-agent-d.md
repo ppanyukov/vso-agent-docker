@@ -23,13 +23,20 @@ Briefly:
 
 - removal of agent registration from VSO on stop
 
+- security features
+
+- auto-update on start and restart
+
+- can build and run docker images using host's docker daemon
+
+
 
 # How to run this image
 
 ## Step 0: Set some env vars
 
 ```
-VSTS_AGENT_IMAGE_TAG="ppanyukov/vsts-agent-d-auto:dev"
+VSTS_AGENT_IMAGE_TAG="ppanyukov/vsts-agent-d:latest"
 VSTS_AGENT_SETTINGS_FILE="~/.vsts-agent/vsts.settings"
 ```
 
@@ -53,16 +60,8 @@ EOF
 
 ```
 
-## Step 2: Build or pull the image
+## Step 2: Pull the image
 
-
-### Build the image
-
-```
-docker build --tag ${VSTS_AGENT_IMAGE_TAG} .
-```
-
-### Pull the image
 
 ```
 docker pull ${VSTS_AGENT_IMAGE_TAG}
@@ -130,9 +129,13 @@ docker start ${CONTAINER_NAME}
 This will register new agent with VSO.
 
 
-Using `--restart` option with daemonised mode.
+
+**Using `--restart` option with daemonised mode.**
+
 If the agent crashes for some reason, docker will restart
 the container. This will create new agent registration in 
 the agent pool in VSO.
+
+
 
 
