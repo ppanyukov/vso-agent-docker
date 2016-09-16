@@ -24,7 +24,7 @@ Image is built on top of base `vsts-agent` to run in unattended
 mode on VMs and on clusters, with several features and enhancements
 required to support this.
 
-Pre-built docker images: https://hub.docker.com/r/ppanyukov/vsts-agent-d-auto/tags/
+Pre-built docker images: https://hub.docker.com/r/ppanyukov/vsts-agent-d/tags/
 
 Briefly:
 
