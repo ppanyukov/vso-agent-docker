@@ -1,3 +1,17 @@
+# DO NOT USE
+
+There is no longer a need for this project. All features are now incorporated equally or better into official Microsoft images.
+
+Use them instead.
+
+- Docker image: https://hub.docker.com/_/microsoft-azure-pipelines-vsts-agent 
+
+- Github repo: https://hub.docker.com/_/microsoft-azure-pipelines-vsts-agent 
+
+-------
+
+
+
 # Agents:
 
 
